@@ -2,6 +2,7 @@ require "htmlentities"
 require "addressable/uri"
 
 require "argentum/attribute"
+require "argentum/json_path"
 require "argentum/operation"
 require "argentum/multi_logger"
 require "argentum/task"
