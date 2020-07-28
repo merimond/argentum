@@ -31,6 +31,10 @@ module Argentum
         JSONPath.new super(name)
       end
 
+      def merge(other)
+        JSONPath.new super(other)
+      end
+
       def method_missing(name, *args, &block)
         result = JSONPath.new self[name.to_s]
         yield result if block_given? && result
