@@ -19,8 +19,8 @@ module Argentum
       end
     end
 
-    def call(params = {}, &block)
-      @result = execute(params)
+    def call(*params, &block)
+      @result = execute(*params)
       if success? && block_given?
         yield @result
       end

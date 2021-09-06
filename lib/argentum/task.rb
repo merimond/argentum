@@ -1,19 +1,36 @@
 module Argentum
   class Task
-
     attr_reader :logger, :name
+
+    @@db_config = nil
+
+    def self.set_db_config(value)
+      @@db_config = value
+    end
 
     def self.start(*args)
       new(*args) do |task|
         task.start
         yield task if block_given?
+        task.complete
       end
     end
 
     def initialize(name)
-      @started_at = Time.now
       @name = name
-      @logger = MultiLogger.to_file name.gsub(":", "-").gsub("_", "-")
+      @logger = MultiLogger.new
+
+      if defined?(Rails)
+        @logger.add FileLogger.new(name)
+      end
+
+      if @@db_config.is_a?(Hash)
+        @logger.add DatabaseLogger.new(name, @@db_config)
+      end
+
+      #if !defined?(Rails) || Rails.env != "production"
+        @logger.add StdOutLogger.new(name)
+      #end
 
       if ENV["LOG_ACTIVE_RECORD"] == "true"
         ActiveRecord::Base.logger = logger
@@ -25,11 +42,13 @@ module Argentum
     end
 
     def start
+      @started_at = Time.now
       logger.info "%s started" % name
     end
 
     def complete
       logger.info "%s completed" % name
+      logger.close
     end
 
     def error(*args, &block)
@@ -45,7 +64,7 @@ module Argentum
     end
 
     def been_running_longer_than?(secs)
-      Time.now - @started_at > secs.to_i
+      @started_at.nil? ? false : (Time.now - @started_at > secs.to_i)
     end
 
     def log_operation_results(operation)

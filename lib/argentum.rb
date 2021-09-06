@@ -4,18 +4,17 @@ require "addressable/uri"
 require "argentum/attribute"
 require "argentum/json_path"
 require "argentum/operation"
-require "argentum/multi_logger"
 require "argentum/task"
+require "argentum/task/database_logger"
+require "argentum/task/file_logger"
+require "argentum/task/multi_logger"
+require "argentum/task/stdout_logger"
 require "argentum/uuid"
 
 module Argentum
 
   def self.attribute(*args, &block)
     Attribute.sanitize(*args, &block)
-  end
-
-  def self.logger(*args, &block)
-    MultiLogger.to_file(*args, &block)
   end
 
   def self.task(*args, &block)
