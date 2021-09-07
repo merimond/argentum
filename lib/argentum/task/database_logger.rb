@@ -57,16 +57,32 @@ module Argentum
         @conn.finish
       end
 
+      def debug?
+        true
+      end
+
       def debug(message)
         log("debug", message)
+      end
+
+      def info?
+        true
       end
 
       def info(message)
         log("info", message)
       end
 
-      def fatal(message)
-        log("fatal", message)
+      def error?
+        true
+      end
+
+      def error(message)
+        log("error", message)
+      end
+
+      def warn?
+        true
       end
 
       def warn(message)
