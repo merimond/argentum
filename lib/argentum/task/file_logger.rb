@@ -11,7 +11,7 @@ module Argentum
         dir  = File.join(Dir.pwd, "log")
         path = File.join(dir, path)
 
-        unless File.exists?(dir)
+        unless File.exist?(dir)
           Dir.mkdir(dir)
         end
 
